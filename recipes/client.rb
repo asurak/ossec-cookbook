@@ -53,7 +53,7 @@ template "#{node['ossec']['dir']}/.ssh/authorized_keys" do
   owner 'ossec'
   group 'ossec'
   mode '0600'
-  variables(key: ossec_key['pubkey'])
+  variables({:key => ossec_key['pubkey'], :servers => ossec_server || []})
 end
 
 file "#{node['ossec']['dir']}/etc/client.keys" do
