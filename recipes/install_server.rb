@@ -22,3 +22,13 @@ include_recipe 'ossec::repository'
 package 'ossec' do
   package_name value_for_platform_family('debian' => 'ossec-hids', 'default' => 'ossec-hids-server')
 end
+
+# Enable syslog
+if node.default['ossec']['conf']['server']['syslog_output'] then
+	execute 'ossec-enable-syslog' do
+	  command "#{node['ossec']['dir']}/bin/ossec-control enable client-syslog"
+	  not_if "#{node['ossec']['dir']}/bin/ossec-control status | grep syslog"
+	  action :run
+	  notifies :restart, 'service[ossec]'
+	end
+end
