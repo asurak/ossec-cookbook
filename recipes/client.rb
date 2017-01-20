@@ -34,6 +34,15 @@ node.set['ossec']['agent_server_ip'] = ossec_server.first
 
 include_recipe 'ossec::install_agent'
 
+user 'ossec' do
+  action :modify
+  if File.size?("#{node['ossec']['dir']}/etc/client.keys")
+    shell '/bin/false'
+  else
+    shell '/bin/bash'
+  end
+end
+
 dbag_name = node['ossec']['data_bag']['name']
 dbag_item = node['ossec']['data_bag']['ssh']
 ossec_key = if node['ossec']['data_bag']['encrypted']
